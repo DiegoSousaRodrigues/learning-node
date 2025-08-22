@@ -1,11 +1,10 @@
 import { author } from '../models/Autor.js'
-import book from '../models/Livro.js'
 import handleError from '../utils/error.js'
 
-class BookController {
-  static async getAllBook(req, res) {
+class AuthorController {
+  static async getAllAuthor(req, res) {
     try {
-      const list = await book.find({})
+      const list = await author.find({})
       res.status(200).json(list)
     } catch (e) {
       handleError(e, res)
@@ -15,40 +14,38 @@ class BookController {
   static async findById(req, res) {
     try {
       const id = req.params.id
-      const list = await book.findById(id)
+      const list = await author.findById(id)
       res.status(201).json(list)
     } catch (e) {
       handleError(e, res)
     }
   }
 
-  static async addBook(req, res) {
-    const newBook = req.body
+  static async addAuthor(req, res) {
     try {
-      const authorFound = await author.findById(newBook.autor)
-      const completeBook = { ...newBook, autor: { ...authorFound._doc } }
-
-      const _book = await book.create(completeBook)
-      res.status(201).json({ message: 'Criado com sucesso', newBook: _book })
+      const newAuthor = await author.create(req.body)
+      res
+        .status(201)
+        .json({ message: 'Criado com sucesso', newAuthor: newAuthor })
     } catch (e) {
       handleError(e, res)
     }
   }
 
-  static async updateBook(req, res) {
+  static async updateAuthor(req, res) {
     try {
       const id = req.params.id
-      await book.findByIdAndUpdate(id, req.body)
+      await author.findByIdAndUpdate(id, req.body)
       res.status(200).json({ message: 'Livro atualizado' })
     } catch (e) {
       handleError(e, res)
     }
   }
 
-  static async deleteBook(req, res) {
+  static async deleteAuthor(req, res) {
     try {
       const id = req.params.id
-      await book.findByIdAndDelete(id, req.body)
+      await author.findByIdAndDelete(id, req.body)
       res.status(200).json({ message: 'Livro deletado' })
     } catch (e) {
       handleError(e, res)
@@ -56,4 +53,4 @@ class BookController {
   }
 }
 
-export default BookController
+export default AuthorController
